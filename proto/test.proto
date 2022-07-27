@@ -1,3 +1,7 @@
 syntax="proto3";
 
-option go_package=""
+option go_package="/compiledGo";
+
+message Dummy{
+    string name=1;
+}

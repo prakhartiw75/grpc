@@ -2,6 +2,44 @@ syntax="proto3";
 
 option go_package="/compiledGo";
 
-message Dummy{
-    string name=1;
+
+message SumRequest{
+    int32 first=1;
+    int32 second=2;
 }
+
+message SumResponse{
+    int32 totalSum=1;
+}
+
+message PrimeNumberRequest{
+    int32 val=1;
+}
+
+message PrimeNumberResponse{
+    int32 prime=1;
+}
+
+message ComputeAverageRequest{
+    int32 val=1;
+}
+
+message ComputeAverageResponse{
+    float average=1;
+}
+
+message FindMaxRequest{
+    int32 number=1;
+}
+
+message FindMaxResponse{
+    int32 maximum=1;
+}
+
+service RandomeRequest{
+    rpc Sum(SumRequest) returns (SumResponse);
+    rpc PrimeNumber(PrimeNumberRequest) returns (stream PrimeNumberResponse);
+    rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse);
+    // rpc FindMaxNumber(stream FindMaxRequest) returns (stream FindMaxResponse);
+}
+

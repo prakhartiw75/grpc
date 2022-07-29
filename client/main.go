@@ -13,10 +13,10 @@ import (
 )
 
 func ExecuteSum(client compiledGo.RandomeRequestClient) {
-	first, second := 2, 3
+	var first, second int32 = 2, 3
 	request := &compiledGo.SumRequest{
-		First:  int32(first),
-		Second: int32(second),
+		First:  first,
+		Second: second,
 	}
 	response, err := client.Sum(context.Background(), request)
 	if err != nil {
@@ -26,9 +26,9 @@ func ExecuteSum(client compiledGo.RandomeRequestClient) {
 }
 
 func ExecutePrimeNumber(client compiledGo.RandomeRequestClient) {
-	value := 100
+	var value int32 = 100
 	request := &compiledGo.PrimeNumberRequest{
-		Val: int32(value),
+		Val: value,
 	}
 	responseStream, err := client.PrimeNumber(context.Background(), request)
 	if err != nil {

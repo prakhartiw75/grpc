@@ -31,6 +31,9 @@ func (r *randomRequestServerImpl) PrimeNumber(req *compiledGo.PrimeNumberRequest
 				if i%j == 0 {
 					cnt++
 				}
+				if cnt > 2 {
+					return cnt
+				}
 			}
 			return cnt
 		}(i)

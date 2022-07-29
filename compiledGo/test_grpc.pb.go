@@ -25,6 +25,7 @@ type RandomeRequestClient interface {
 	Sum(ctx context.Context, in *SumRequest, opts ...grpc.CallOption) (*SumResponse, error)
 	PrimeNumber(ctx context.Context, in *PrimeNumberRequest, opts ...grpc.CallOption) (RandomeRequest_PrimeNumberClient, error)
 	ComputeAverage(ctx context.Context, opts ...grpc.CallOption) (RandomeRequest_ComputeAverageClient, error)
+	FindMaxNumber(ctx context.Context, opts ...grpc.CallOption) (RandomeRequest_FindMaxNumberClient, error)
 }
 
 type randomeRequestClient struct {
@@ -110,6 +111,37 @@ func (x *randomeRequestComputeAverageClient) CloseAndRecv() (*ComputeAverageResp
 	return m, nil
 }
 
+func (c *randomeRequestClient) FindMaxNumber(ctx context.Context, opts ...grpc.CallOption) (RandomeRequest_FindMaxNumberClient, error) {
+	stream, err := c.cc.NewStream(ctx, &RandomeRequest_ServiceDesc.Streams[2], "/RandomeRequest/FindMaxNumber", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &randomeRequestFindMaxNumberClient{stream}
+	return x, nil
+}
+
+type RandomeRequest_FindMaxNumberClient interface {
+	Send(*FindMaxRequest) error
+	Recv() (*FindMaxResponse, error)
+	grpc.ClientStream
+}
+
+type randomeRequestFindMaxNumberClient struct {
+	grpc.ClientStream
+}
+
+func (x *randomeRequestFindMaxNumberClient) Send(m *FindMaxRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *randomeRequestFindMaxNumberClient) Recv() (*FindMaxResponse, error) {
+	m := new(FindMaxResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // RandomeRequestServer is the server API for RandomeRequest service.
 // All implementations must embed UnimplementedRandomeRequestServer
 // for forward compatibility
@@ -117,7 +149,7 @@ type RandomeRequestServer interface {
 	Sum(context.Context, *SumRequest) (*SumResponse, error)
 	PrimeNumber(*PrimeNumberRequest, RandomeRequest_PrimeNumberServer) error
 	ComputeAverage(RandomeRequest_ComputeAverageServer) error
-	//mustEmbedUnimplementedRandomeRequestServer()
+	FindMaxNumber(RandomeRequest_FindMaxNumberServer) error
 }
 
 // UnimplementedRandomeRequestServer must be embedded to have forward compatible implementations.
@@ -132,6 +164,9 @@ func (UnimplementedRandomeRequestServer) PrimeNumber(*PrimeNumberRequest, Random
 }
 func (UnimplementedRandomeRequestServer) ComputeAverage(RandomeRequest_ComputeAverageServer) error {
 	return status.Errorf(codes.Unimplemented, "method ComputeAverage not implemented")
+}
+func (UnimplementedRandomeRequestServer) FindMaxNumber(RandomeRequest_FindMaxNumberServer) error {
+	return status.Errorf(codes.Unimplemented, "method FindMaxNumber not implemented")
 }
 func (UnimplementedRandomeRequestServer) mustEmbedUnimplementedRandomeRequestServer() {}
 
@@ -211,6 +246,32 @@ func (x *randomeRequestComputeAverageServer) Recv() (*ComputeAverageRequest, err
 	return m, nil
 }
 
+func _RandomeRequest_FindMaxNumber_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(RandomeRequestServer).FindMaxNumber(&randomeRequestFindMaxNumberServer{stream})
+}
+
+type RandomeRequest_FindMaxNumberServer interface {
+	Send(*FindMaxResponse) error
+	Recv() (*FindMaxRequest, error)
+	grpc.ServerStream
+}
+
+type randomeRequestFindMaxNumberServer struct {
+	grpc.ServerStream
+}
+
+func (x *randomeRequestFindMaxNumberServer) Send(m *FindMaxResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *randomeRequestFindMaxNumberServer) Recv() (*FindMaxRequest, error) {
+	m := new(FindMaxRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // RandomeRequest_ServiceDesc is the grpc.ServiceDesc for RandomeRequest service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -232,6 +293,12 @@ var RandomeRequest_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "ComputeAverage",
 			Handler:       _RandomeRequest_ComputeAverage_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "FindMaxNumber",
+			Handler:       _RandomeRequest_FindMaxNumber_Handler,
+			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},

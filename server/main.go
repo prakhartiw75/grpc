@@ -58,6 +58,24 @@ func (r *randomRequestServerImpl) ComputeAverage(req compiledGo.RandomeRequest_C
 		cnt++
 	}
 }
+func (r *randomRequestServerImpl) FindMaxNumber(req compiledGo.RandomeRequest_FindMaxNumberServer) error {
+	var maxx int32
+	for {
+		request, err := req.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if maxx < request.Number {
+			maxx = request.Number
+			err = req.Send(&compiledGo.FindMaxResponse{
+				Maximum: maxx,
+			})
+			if err != nil {
+				fmt.Printf("Error while seding response to client %v", err)
+			}
+		}
+	}
+}
 func main() {
 	fmt.Println("You are Inside Server")
 	list, err := net.Listen("tcp", "localhost:8080")

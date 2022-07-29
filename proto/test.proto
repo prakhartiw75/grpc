@@ -40,6 +40,6 @@ service RandomeRequest{
     rpc Sum(SumRequest) returns (SumResponse);
     rpc PrimeNumber(PrimeNumberRequest) returns (stream PrimeNumberResponse);
     rpc ComputeAverage(stream ComputeAverageRequest) returns (ComputeAverageResponse);
-    // rpc FindMaxNumber(stream FindMaxRequest) returns (stream FindMaxResponse);
+    rpc FindMaxNumber(stream FindMaxRequest) returns (stream FindMaxResponse);
 }
 

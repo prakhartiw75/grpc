@@ -23,7 +23,6 @@ func (r *randomRequestServerImpl) Sum(ctx context.Context, req *compiledGo.SumRe
 
 func (r *randomRequestServerImpl) PrimeNumber(req *compiledGo.PrimeNumberRequest, res compiledGo.RandomeRequest_PrimeNumberServer) error {
 	value := req.Val
-	fmt.Println("Hello", value)
 	for i := 2; int32(i) <= value; i++ {
 		cnt := func(i int) int {
 			cnt := 0
